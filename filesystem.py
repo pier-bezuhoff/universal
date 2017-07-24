@@ -1,7 +1,7 @@
 # !/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Linux compatible #awesome#
-
+# Linux compatible
+# TODO: check in Windows
 import os
 import os.path as op
 import shutil
@@ -10,7 +10,7 @@ import stat
 import re
 
 NEXT_DIRECTORY_CHARACTER = SEP = op.sep # / or \ (slash or backslash)
-HOME = op.expanduser('~') # TODO: check in Windows
+HOME = op.expanduser('~')
 assert op.exists(HOME), "HOME directory must exist"
 
 class _Item(object):
@@ -45,7 +45,7 @@ class _Item(object):
 		os.remove(self._path)
 
 	def move(self, directory):
-		"""move to directory"""
+		"""move to a Directory"""
 		assert self.exist(), "Cannot move not existed {}".format(self)
 		new_path = concat(directory.path, self._name)
 		shutil.move(self._path, new_path)
@@ -58,13 +58,13 @@ class _Item(object):
 		return Item(new_path)
 
 	def copy_to(self, directory, new_name=None):
-		"""return copy to directory"""
+		"""return copy to a Directory"""
 		new_name = new_name or self._name
 		new_path = concat(directory.path, new_name)
 		return self.copy(new_path)
 
 	def rename(self, new_name):
-		"""rename with extension"""
+		"""rename & update path"""
 		new_path = self._path[:self._path.rfind(SEP) + 1] + new_name
 		os.rename(self._path, new_path)
 		self._path = new_path
@@ -79,11 +79,11 @@ class _Item(object):
 		return op.getsize(self._path)
 
 	def get_parent(self):
-		"""return parent directory"""
+		"""return parent Directory"""
 		Directory(self._path.rsplit(SEP, maxsplit=1)[0])
 
 	def hardlink(self, directory, name=None):
-		"""create hard link in directory"""
+		"""create hard link in a Directory and return it"""
 		name = name or self._name
 		path = concat(directory.path, name)
 		assert path != self._path, "Cannot create hard link with the same path '{}'".format(path)
@@ -91,7 +91,7 @@ class _Item(object):
 		return Item(path)
 
 	def symlink(self, directory, name=None):
-		"""create symbolic (standard) link in directory"""
+		"""create symbolic (standard) link in a Directory and return it"""
 		name = name or self._name
 		path = concat(directory.path, name)
 		assert path != self._path, "Cannot create symbolic link with the same path '{}'".format(path)
@@ -99,7 +99,8 @@ class _Item(object):
 		return Item(path)
 
 	def chown(self, uid, gid):
-		"""NOTE (on the comp):
+		"""change owner id (uid) and owner group id (gid)
+		NOTE (on the comp):
 		0 -- root, 1000 -- vanfed, 1001 -- sauron"""
 		os.chown(self._path, uid, gid)
 
@@ -128,7 +129,6 @@ class _Item(object):
 
 	@directory.setter
 	def directory(self, new_directory):
-		assert isinstance(new_directory, Directory), "not a Directory"
 		self.move(new_directory)
 
 	@property
