@@ -1,6 +1,6 @@
 # !/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Linux compatible
+# Linux compatible #guitar
 
 import os
 import os.path as op
