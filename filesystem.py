@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 # Linux compatible
 # TODO: check in Windows
+"""The module contains ordered tools for manipulating with
+files and directories based on OOP: there are 2 main classes:
+Files and Directories (and Groups for manipulating with
+groups of files and/or directories"""
 import os
 import os.path as op
 import shutil
