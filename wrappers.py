@@ -7,6 +7,37 @@ import random
 
 # remember of timeit.timeit()
 
+def print_attrs(instance, end='\n', sep=':\t'):
+	for key in dir(instance):
+		print(key + key_sep + str(getattr(instance, key)), end=end)
+
+def on_instance(action=None):
+	if action is None:
+		action = lambda instance: print('instance created')
+	def decorator(cls):
+		def new_init(self, *args, **kwargs):
+			instance = cls.__init__(self, *args, **kwargs)
+			action(instance)
+			return instance
+		cls.__init__ = new_init
+		return cls
+
+def append_code(instance, method_name, code):
+	"""`code` is func(self, *pargs, **kwargs)
+	order: old_method(...); code(...)"""
+	def new_method(self, *pargs, **kwargs):
+		getattr(self, name)(*pargs, **kwargs)
+		code(self, *pargs, **kwargs)
+	setattr(instance, method_name, new_method)
+
+def prepend_code(instance, method_name, code):
+	"""`code` is func(self, *pargs, **kwargs)
+	order: code(...); old_method(...)"""
+	def new_method(self, *pargs, **kwargs):
+		code(self, *pargs, **kwargs)
+		getattr(self, name)(*pargs, **kwargs)
+	setattr(instance, method_name, new_method)
+
 def standard(func, arg_list=None, arg_dict=None, return_answer=True, print_output=True, repeat=0):
 	"""useful wrapper for timing"""
 	if arg_list is None:
